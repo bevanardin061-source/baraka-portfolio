@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>BARAKA · Manage</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#0d0c0b;--ink-2:#171513;--paper:#ece6da;--muted:#a39b90;--gold:#d9ad61;--line:#ffffff24;--bad:#ff8c7a;
+--sans:'Archivo','Helvetica Neue',Arial,sans-serif;--mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+--gl:max(16px,env(safe-area-inset-left,0px));--gr:max(16px,env(safe-area-inset-right,0px));color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.wrap{max-width:1100px;margin:0 auto;padding:0 var(--gr) 80px var(--gl)}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(18px + env(safe-area-inset-top,0px)) var(--gr) 18px var(--gl);border-bottom:1px solid var(--line);position:sticky;top:0;background:#0d0c0bee;backdrop-filter:blur(10px);z-index:5}
+.brand{font-weight:900;font-stretch:80%;font-size:28px;letter-spacing:-.06em;line-height:1;text-decoration:none}.brand i{font-style:normal;color:var(--gold)}
+.hl{display:flex;gap:10px;align-items:center}
+.btn{border:1px solid #ffffff55;background:transparent;padding:11px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.btn.gold{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.btn.gold:hover{background:var(--paper);border-color:var(--paper)}
+.btn:disabled{opacity:.5;cursor:default}
+h1{font-size:clamp(2.6rem,9vw,6rem);font-weight:900;font-stretch:75%;letter-spacing:-.05em;line-height:.9;margin:clamp(30px,6vh,60px) 0 12px}
+h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
+.lead{color:var(--muted);max-width:56ch;margin:0 0 28px}
+.card{border:1px solid var(--line);background:var(--ink-2);padding:clamp(16px,3vw,28px);margin-bottom:28px}
+.center{min-height:70svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+label{display:grid;gap:6px;color:var(--muted)}
+input[type=text],input[type=number],select,textarea{background:var(--ink);border:1px solid var(--line);padding:12px 12px;width:100%;color:var(--paper);border-radius:0}
+textarea{min-height:110px;resize:vertical}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;border:1px dashed #ffffff55;padding:30px 16px;cursor:pointer;flex:1;min-width:230px;transition:.2s}
+.drop:hover,.drop.on{border-color:var(--gold);background:#d9ad6112}
+.drop input{display:none}
+.drop b{font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.ph{border:1px solid var(--line);background:var(--ink);display:flex;flex-direction:column}
+.ph .im{position:relative;aspect-ratio:4/5;background:#000;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .home{position:absolute;left:8px;top:8px;background:var(--gold);color:var(--ink);padding:4px 8px}
+.ph .f{padding:10px;display:grid;gap:8px}
+.ph .acts{display:flex;gap:8px}
+.ph .acts .btn{flex:1;justify-content:center;padding:10px 8px;font-size:10px}
+.btn.del:hover{background:var(--bad);border-color:var(--bad);color:var(--ink)}
+.btn.armed{background:var(--bad);border-color:var(--bad);color:var(--ink)}
+.count{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:12px 18px;z-index:20;max-width:calc(100vw - 32px);font-weight:600}
+.toast.err{background:var(--bad)}
+.prog{height:3px;background:var(--line);margin-top:14px}.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.note{color:var(--muted);font-size:14px}
+code{font-family:var(--mono);font-size:13px;background:#ffffff14;padding:2px 6px}
+</style>
+</head>
+<body>
+<header><a class="brand" href="./">B<i>.</i></a><div class="hl"><a class="btn" href="./" target="_blank" rel="noopener">View site ↗</a><button class="btn" id="out" hidden>Sign out</button></div></header>
+<div class="wrap">
+
+<section id="v-load" class="center"><p class="mono">Loading…</p></section>
+
+<section id="v-setup" class="center" hidden>
+ <h1>Almost there.</h1>
+ <p class="lead">This page isn't connected yet. Open <code>config.js</code> and fill in the Supabase URL and key, then reload. The steps are in <code>SETUP.md</code>.</p>
+</section>
+
+<section id="v-login" class="center" hidden>
+ <p class="mono" style="color:var(--gold)">Private</p>
+ <h1>Your site,<br>your hands.</h1>
+ <p class="lead">Sign in with the Google account for this site to add or remove your photos and edit your words. Nobody else can change anything.</p>
+ <button class="btn gold" id="g">Sign in with Google</button>
+</section>
+
+<section id="v-denied" class="center" hidden>
+ <h1>Wrong account.</h1>
+ <p class="lead">You're signed in as <b id="who"></b>, which can't edit this site. Sign out and use the owner's Google account.</p>
+ <button class="btn" id="out2">Sign out</button>
+</section>
+
+<section id="v-app" hidden>
+ <h1>Your photos.</h1>
+ <p class="lead">Add new ones, remove what you don't want, and fix captions. Changes show on the site straight away.</p>
+
+ <div class="card">
+  <h2>Add photos</h2>
+  <p class="note" style="margin:0 0 16px">Pick a series, then choose one or many photos from your phone or computer.</p>
+  <div class="row">
+   <label class="mono" style="min-width:200px">Series<select id="addCat"></select></label>
+   <label class="drop" id="drop"><b>+ Choose photos</b><span class="note">or drop them here</span><input type="file" id="file" accept="image/*" multiple></label>
+  </div>
+  <div class="prog" id="prog" hidden><i></i></div>
+  <p class="note" id="upMsg" style="margin:10px 0 0"></p>
+ </div>
+
+ <div class="card">
+  <div class="row" style="justify-content:space-between;align-items:baseline"><h2>On the site</h2><span class="mono count" id="count"></span></div>
+  <div class="grid" id="grid"></div>
+ </div>
+
+ <div class="card">
+  <h2>Words &amp; numbers</h2>
+  <p class="note" style="margin:0 0 16px">These are the lines and figures on the home screen and story.</p>
+  <form id="sf" class="row" style="display:grid;gap:14px">
+   <label class="mono">Home line (small text under the name)<input type="text" id="s_tag"></label>
+   <label class="mono">Intro statement (after "Not made to blend in.")<input type="text" id="s_aboutLead"></label>
+   <label class="mono">Intro paragraph (first paragraph is shown)<textarea id="s_aboutBody"></textarea></label>
+   <label class="mono">Footer note<input type="text" id="s_homeNote"></label>
+   <div class="row"><label class="mono" style="flex:1;min-width:140px">Models who auditioned<input type="number" min="10" max="3000" id="s_dotsTotal"></label><label class="mono" style="flex:1;min-width:140px">Models picked<input type="number" min="0" max="3000" id="s_dotsPicked"></label></div>
+   <div><button class="btn gold" type="submit" id="saveS">Save words</button></div>
+  </form>
+ </div>
+</section>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SERIES=[["studio","Studio"],["polaroids","Polaroids"],["face-paint","Face paint"],["collective","Collective"],["stage","Stage"],["editorial","Editorial"]];
+const C=window.BARAKA_CONFIG||{};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let sb,frames=[],settings={},routed=null,armedId=null,armTimer=null,toastT;
+const views=['load','setup','login','denied','app'];
+function show(v){views.forEach(x=>$('#v-'+x).hidden=x!==v);$('#out').hidden=!(v==='app'||v==='denied')}
+function toast(m,err){const t=$('#toast');t.textContent=m;t.className='toast'+(err?' err':'');t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3800)}
+const catName=c=>(SERIES.find(s=>s[0]===c)||[])[1]||c;
+$('#addCat').innerHTML=SERIES.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('');
+
+async function init(){
+ if(!C.url||!C.anonKey||!window.supabase){show('setup');return}
+ sb=supabase.createClient(C.url,C.anonKey);
+ const{data:{session}}=await sb.auth.getSession();route(session);
+ sb.auth.onAuthStateChange((_e,s)=>route(s));
+}
+function route(s){const u=s&&s.user;const key=u?u.id:'none';if(routed===key)return;routed=key;
+ if(!u){show('login');return}
+ if((u.email||'').toLowerCase()!==String(C.ownerEmail||'').toLowerCase()){$('#who').textContent=u.email||'this account';show('denied');return}
+ show('app');load()}
+$('#g').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
+const signOut=async()=>{await sb.auth.signOut();routed=null;route(null)};
+$('#out').onclick=signOut;$('#out2').onclick=signOut;
+
+async function load(){
+ const a=await sb.from('frames').select('*').order('sort',{ascending:true}).order('id',{ascending:true});
+ if(a.error){toast(a.error.message,1);return}frames=a.data||[];
+ const b=await sb.from('site_settings').select('data').eq('id',1).maybeSingle();
+ settings=(b.data&&b.data.data)||{};
+ if(!Object.keys(settings).length){try{const r=await fetch('data/site.json',{cache:'no-store'});if(r.ok)settings=(await r.json()).settings||{}}catch(e){}}
+ renderGrid();fillSettings()}
+
+function renderGrid(){
+ $('#count').textContent=frames.length+(frames.length===1?' photo':' photos');
+ $('#grid').innerHTML=frames.map(f=>`<div class="ph" data-id="${f.id}"><div class="im"><img src="${esc(f.src)}" alt="${esc(f.title)}" loading="lazy">${+settings.homeFrame===f.id?'<span class="home mono">Home photo</span>':''}</div><div class="f">
+ <label class="mono">Caption<input type="text" data-k="title" value="${esc(f.title)}"></label>
+ <label class="mono">Series<select data-k="cat">${SERIES.map(s=>`<option value="${s[0]}"${s[0]===f.cat?' selected':''}>${s[1]}</option>`).join('')}</select></label>
+ <div class="acts"><button class="btn" data-act="home"${+settings.homeFrame===f.id?' disabled':''}>Make home</button><button class="btn del${armedId===f.id?' armed':''}" data-act="del">${armedId===f.id?'Tap again':'Delete'}</button></div></div></div>`).join('')||'<p class="note">No photos yet. Add some above.</p>'}
+
+$('#grid').addEventListener('change',async e=>{const k=e.target.dataset.k;if(!k)return;const id=+e.target.closest('.ph').dataset.id;const val=e.target.value.trim()||(k==='title'?'Photo':e.target.value);
+ const{error}=await sb.from('frames').update({[k]:val}).eq('id',id);if(error)return toast(error.message,1);
+ const f=frames.find(x=>x.id===id);if(f)f[k]=val;toast('Saved')});
+$('#grid').addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const id=+b.closest('.ph').dataset.id;
+ if(b.dataset.act==='home'){settings.homeFrame=id;const{error}=await sb.from('site_settings').upsert({id:1,data:settings});if(error)return toast(error.message,1);renderGrid();toast('Home photo changed');return}
+ if(b.dataset.act==='del'){if(armedId!==id){armedId=id;clearTimeout(armTimer);armTimer=setTimeout(()=>{armedId=null;renderGrid()},4000);renderGrid();return}
+  armedId=null;clearTimeout(armTimer);const f=frames.find(x=>x.id===id);
+  const{error}=await sb.from('frames').delete().eq('id',id);if(error)return toast(error.message,1);
+  const m=f&&String(f.src).match(/\/storage\/v1\/object\/public\/frames\/(.+)$/);if(m)await sb.storage.from('frames').remove([decodeURIComponent(m[1])]);
+  frames=frames.filter(x=>x.id!==id);renderGrid();toast('Photo deleted')}});
+
+async function shrink(file){const url=URL.createObjectURL(file);try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('Could not read '+file.name));i.src=url});
+ const M=1600,k=Math.min(1,M/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*k),h=Math.round(img.naturalHeight*k);
+ const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);
+ const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.86));return{blob,w,h}}finally{URL.revokeObjectURL(url)}}
+async function addFiles(list){const files=[...list].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp)$/i.test(f.name));if(!files.length)return toast('Choose image files',1);
+ const cat=$('#addCat').value,pr=$('#prog'),bar=pr.firstElementChild,msg=$('#upMsg');pr.hidden=false;let ok=0;
+ for(let i=0;i<files.length;i++){const f=files[i];msg.textContent=`Uploading ${i+1} of ${files.length}…`;bar.style.width=(i/files.length*100)+'%';
+  try{const{blob,w,h}=await shrink(f);const path=`${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+   const up=await sb.storage.from('frames').upload(path,blob,{contentType:'image/jpeg',cacheControl:'31536000'});if(up.error)throw up.error;
+   const{data:{publicUrl}}=sb.storage.from('frames').getPublicUrl(path);
+   const title=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').slice(0,60)||'Photo';
+   const ins=await sb.from('frames').insert({src:publicUrl,w,h,cat,title,sort:Date.now()}).select().single();if(ins.error)throw ins.error;
+   frames.push(ins.data);ok++;renderGrid()}catch(e){toast((e&&e.message)||'Upload failed',1)}}
+ bar.style.width='100%';msg.textContent=ok?`Added ${ok} ${ok>1?'photos':'photo'}. They're on the site now.`:'';setTimeout(()=>{pr.hidden=true;bar.style.width='0'},900);$('#file').value=''}
+$('#file').onchange=e=>addFiles(e.target.files);
+const dr=$('#drop');['dragenter','dragover'].forEach(n=>dr.addEventListener(n,e=>{e.preventDefault();dr.classList.add('on')}));['dragleave','drop'].forEach(n=>dr.addEventListener(n,e=>{e.preventDefault();dr.classList.remove('on')}));dr.addEventListener('drop',e=>addFiles(e.dataTransfer.files));
+
+const SF=['tag','aboutLead','aboutBody','homeNote','dotsTotal','dotsPicked'];
+function fillSettings(){SF.forEach(k=>{const el=$('#s_'+k);if(el&&settings[k]!=null)el.value=settings[k]})}
+$('#sf').addEventListener('submit',async e=>{e.preventDefault();const b=$('#saveS');b.disabled=true;
+ SF.forEach(k=>{const el=$('#s_'+k);settings[k]=el.type==='number'?Math.max(0,+el.value||0):el.value});
+ if(settings.dotsPicked>settings.dotsTotal)settings.dotsPicked=settings.dotsTotal;
+ const{error}=await sb.from('site_settings').upsert({id:1,data:settings});b.disabled=false;if(error)return toast(error.message,1);fillSettings();toast('Saved')});
+init();
+</script>
+</body>
+</html>

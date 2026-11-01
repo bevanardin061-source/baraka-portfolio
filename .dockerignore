@@ -1,0 +1,8 @@
+.git
+.vercel
+.env*
+**/.env*
+node_modules
+SETUP.md
+setup.sql
+.gitignore
