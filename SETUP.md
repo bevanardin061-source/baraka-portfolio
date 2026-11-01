@@ -26,7 +26,7 @@ With Docker Desktop running, start the site from this folder:
 docker compose up --build
 ```
 
-Open `http://localhost:8080` (admin: `http://localhost:8080/admin.html`). Add `http://localhost:8080/admin.html` to Supabase **Authentication -> URL Configuration -> Redirect URLs** to test Google sign-in locally. Stop the container with `Ctrl+C`.
+Open `http://localhost:8081` (admin: `http://localhost:8081/admin.html`). Add `http://localhost:8081/admin.html` to Supabase **Authentication -> URL Configuration -> Redirect URLs** to test Google sign-in locally. Stop the container with `Ctrl+C`.
 
 The container serves the static site; Supabase remains the remote database, photo storage, and authentication service. `.env.local`, `.vercel/`, and setup-only files are excluded from the Docker build context.
 
