@@ -401,7 +401,7 @@ async function playMusic(){
  bgMusic.src=musicTrack.value;musicStatus.classList.remove('err');musicStatus.textContent='Loading '+selectedTrack()+'…';
  try{await bgMusic.play();autoplayBlocked=false}catch(e){musicStatus.classList.add('err');if(e.name==='NotAllowedError'){autoplayBlocked=true;musicLabel.textContent='Tap for music';musicSummary.setAttribute('aria-label','Play background music');musicStatus.textContent='Autoplay was blocked. Tap the music control to listen.'}else musicStatus.textContent='Track unavailable. Check the audio files.'}
 }
-musicTrack.addEventListener('change',()=>{bgMusic.pause();bgMusic.removeAttribute('src');bgMusic.load();musicStatus.classList.remove('err');musicStatus.textContent='Tap play to listen.';setMusicPlaying(false)});
+musicTrack.addEventListener('change',()=>{bgMusic.pause();bgMusic.src=musicTrack.value;musicStatus.classList.remove('err');playMusic()});
 musicSummary.addEventListener('click',()=>{if(bgMusic.paused)playMusic()});
 musicToggle.addEventListener('click',()=>{if(!bgMusic.paused)bgMusic.pause();else playMusic()});
 bgMusic.addEventListener('play',()=>{setMusicPlaying(true);musicStatus.classList.remove('err');musicStatus.textContent='Now playing: '+selectedTrack()});
