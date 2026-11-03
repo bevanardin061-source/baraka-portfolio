@@ -36,6 +36,9 @@ The container serves the static site; Supabase remains the remote database, phot
 - **Make home:** sets the big photo behind the name on the home screen.
 - **Words & numbers:** edit the home line, intro text, footer note and the 1,000 / 400 figures.
 
+## Background music
+The licensed tracks are in `audio/`: `AUD-20261101-WA0010.mp3` (Bus 170), `AUD-20261101-WA0011.mp3` (Yapa Yapa), and `AUD-20261101-WA0012.mp3` (Oh No). Visitors choose a track and tap Play in the header; browsers require this interaction before playing audio. Rebuild the Docker image with `docker compose up --build -d` after changing the files.
+
 ## Notes
 - If `config.js` is left empty the public site simply uses `data/site.json`, and the admin page shows a setup notice.
 - The photos that came with the site stay in the `images/` folder. If Baraka deletes one in the admin page it disappears from the site; the file itself is only removed from storage when it was uploaded through the admin page.
