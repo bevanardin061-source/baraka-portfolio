@@ -37,7 +37,7 @@ The container serves the static site; Supabase remains the remote database, phot
 - **Words & numbers:** edit the home line, intro text, footer note and the 1,000 / 400 figures.
 
 ## Background music
-The licensed tracks are in `audio/`: `AUD-20261101-WA0010.mp3` (Bus 170), `AUD-20261101-WA0011.mp3` (Yapa Yapa), and `AUD-20261101-WA0012.mp3` (Oh No). Visitors choose a track and tap Play in the header; browsers require this interaction before playing audio. Rebuild the Docker image with `docker compose up --build -d` after changing the files.
+The licensed tracks are in `audio/`: `AUD-20261101-WA0010.mp3` (Bus 170), `AUD-20261101-WA0011.mp3` (Yapa Yapa), and `AUD-20261101-WA0012.mp3` (Oh No). The site loads and decodes all three for automatic sequential playback, starting with Oh No. A Play/Pause music button stays at the lower left. Browsers that block sound on page load start playback on the visitor's first interaction. Rebuild the Docker image with `docker compose up --build -d` after changing the files.
 
 ## Notes
 - If `config.js` is left empty the public site simply uses `data/site.json`, and the admin page shows a setup notice.
