@@ -37,13 +37,13 @@ img{display:block}
 .idx{color:#d8d0c3}
 .menu-btn{border:1px solid #ffffff55;padding:10px 16px;background:#0d0c0b66;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:.2s}
 .menu-btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
-.music{position:relative;z-index:2}
+.music{position:fixed;left:var(--gl);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:60}
 .music summary{display:flex;align-items:center;justify-content:center;gap:8px;min-width:42px;height:42px;padding:0 10px;border:1px solid #ffffff55;background:#0d0c0b66;cursor:pointer;list-style:none;transition:.2s}
 .music summary::-webkit-details-marker{display:none}
 .music summary:hover,.music[open] summary{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .music summary svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .music-label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-.music-panel{position:absolute;top:calc(100% + 12px);right:0;width:min(280px,calc(100vw - 32px));padding:16px;display:grid;gap:12px;background:var(--ink-2);border:1px solid var(--line);box-shadow:0 12px 36px #000b}
+.music-panel{position:absolute;top:auto;right:auto;bottom:calc(100% + 12px);left:0;width:min(280px,calc(100vw - 32px));padding:16px;display:grid;gap:12px;background:var(--ink-2);border:1px solid var(--line);box-shadow:0 12px 36px #000b}
 .music-panel label{display:grid;gap:8px;color:var(--muted)}
 .music-panel select{width:100%;min-width:0;padding:10px;background:var(--ink);border:1px solid var(--line);border-radius:0;color:var(--paper);font:inherit;font-size:14px}
 .music-panel .music-play{width:100%}
@@ -223,7 +223,7 @@ img{display:block}
 
 
 <div class="rail" id="rail" aria-hidden="true"></div>
-<header class="top"><a class="brand" href="#" id="toTop" aria-label="BARAKA, back to start">B<i>.</i></a><span class="idx mono" id="idx">Start</span><details class="music" id="musicPlayer"><summary id="musicSummary" aria-label="Open music player" title="Background music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span class="music-label" id="musicLabel">Music</span></summary><div class="music-panel"><label class="mono" for="musicTrack">Track<select id="musicTrack"><option value="audio/AUD-20261101-WA0010.mp3">Bus 170 - Jiire Smith</option><option value="audio/AUD-20261101-WA0011.mp3">Yapa Yapa - Jiire Smith</option><option value="audio/AUD-20261101-WA0012.mp3">Oh No - Rema</option></select></label><button class="menu-btn mono music-play" id="musicToggle" type="button" aria-pressed="false">Play</button><p class="mono music-status" id="musicStatus" aria-live="polite">Tap play to listen.</p></div></details><button class="menu-btn mono" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button></header>
+<header class="top"><a class="brand" href="#" id="toTop" aria-label="BARAKA, back to start">B<i>.</i></a><span class="idx mono" id="idx">Start</span><details class="music" id="musicPlayer"><summary id="musicSummary" aria-label="Open music player" title="Background music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span class="music-label" id="musicLabel">Music</span></summary><div class="music-panel"><label class="mono" for="musicTrack">Track<select id="musicTrack"><option value="audio/AUD-20261101-WA0012.mp3">Oh No - Rema</option><option value="audio/AUD-20261101-WA0010.mp3">Bus 170 - Jiire Smith</option><option value="audio/AUD-20261101-WA0011.mp3">Yapa Yapa - Jiire Smith</option></select></label><button class="menu-btn mono music-play" id="musicToggle" type="button" aria-pressed="false">Play</button><p class="mono music-status" id="musicStatus" aria-live="polite">Tap play to listen.</p></div></details><button class="menu-btn mono" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button></header>
 <audio id="backgroundMusic" preload="none" loop></audio>
 <nav class="nav" id="nav" hidden aria-label="Sections"></nav>
 
@@ -395,17 +395,17 @@ $('#nav').addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(
 const bgMusic=$('#backgroundMusic'),musicToggle=$('#musicToggle'),musicTrack=$('#musicTrack'),musicStatus=$('#musicStatus'),musicSummary=$('#musicSummary'),musicLabel=$('#musicLabel');
 const selectedTrack=()=>musicTrack.selectedOptions[0].textContent;
 let autoplayBlocked=false;
-function setMusicPlaying(playing){musicToggle.textContent=playing?'Pause':'Play';musicToggle.setAttribute('aria-pressed',String(playing));musicLabel.textContent=playing?'Playing':autoplayBlocked?'Tap for music':'Music';musicSummary.setAttribute('aria-label',playing?'Pause background music':'Open music player')}
+function setMusicPlaying(playing){musicToggle.textContent=playing?'Pause':'Play';musicToggle.setAttribute('aria-pressed',String(playing));musicLabel.textContent=playing?'Playing':autoplayBlocked?'Tap for music':'Paused';musicSummary.setAttribute('aria-label',playing?'Pause background music':'Play background music')}
 async function playMusic(){
  if(!bgMusic.paused){bgMusic.pause();return}
  bgMusic.src=musicTrack.value;musicStatus.classList.remove('err');musicStatus.textContent='Loading '+selectedTrack()+'…';
  try{await bgMusic.play();autoplayBlocked=false}catch(e){musicStatus.classList.add('err');if(e.name==='NotAllowedError'){autoplayBlocked=true;musicLabel.textContent='Tap for music';musicSummary.setAttribute('aria-label','Play background music');musicStatus.textContent='Autoplay was blocked. Tap the music control to listen.'}else musicStatus.textContent='Track unavailable. Check the audio files.'}
 }
 musicTrack.addEventListener('change',()=>{bgMusic.pause();bgMusic.src=musicTrack.value;musicStatus.classList.remove('err');playMusic()});
-musicSummary.addEventListener('click',()=>{if(bgMusic.paused)playMusic()});
+musicSummary.addEventListener('click',()=>{if(bgMusic.paused)playMusic();else bgMusic.pause()});
 musicToggle.addEventListener('click',()=>{if(!bgMusic.paused)bgMusic.pause();else playMusic()});
 bgMusic.addEventListener('play',()=>{setMusicPlaying(true);musicStatus.classList.remove('err');musicStatus.textContent='Now playing: '+selectedTrack()});
-bgMusic.addEventListener('pause',()=>setMusicPlaying(false));
+bgMusic.addEventListener('pause',()=>{setMusicPlaying(false);if(bgMusic.currentSrc)musicStatus.textContent='Paused: '+selectedTrack()});
 bgMusic.addEventListener('error',()=>{setMusicPlaying(false);musicStatus.classList.add('err');musicStatus.textContent='Track unavailable. Check the audio files.'});
 playMusic();
 $('#toTop').onclick=e=>{e.preventDefault();goTo('hero')};$('#backTop').onclick=()=>goTo('hero');
