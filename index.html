@@ -382,6 +382,8 @@ function setMenu(o){$('#nav').hidden=!o;$('#menuBtn').setAttribute('aria-expande
 $('#menuBtn').onclick=()=>setMenu($('#nav').hidden);
 $('#nav').addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!a)return;e.preventDefault();setMenu(false);setTimeout(()=>goTo(a.dataset.go),30)});
 const musicToggle=$('#musicToggle');
+const silentEmbed=new URLSearchParams(location.search).get('embed')==='1';
+if(silentEmbed)musicToggle.hidden=true;
 const musicTracks=[
  'audio/AUD-20261101-WA0012.mp3',
  'audio/AUD-20261101-WA0010.mp3',
@@ -391,7 +393,7 @@ const MusicContext=window.AudioContext||window.webkitAudioContext;
 let musicContext=null,musicGain=null,musicBuffersPromise=null,musicSource=null,currentMusicTrack=0;
 let musicStartPending=false;
 let waitingForInteraction=false;
-let musicShouldPlay=true;
+let musicShouldPlay=!silentEmbed;
 function ensureMusicContext(){
  if(!musicContext){
   musicContext=new MusicContext();
@@ -476,6 +478,7 @@ async function startMusic(){
  }
 }
 musicToggle.addEventListener('click',()=>{
+ if(silentEmbed)return;
  if(musicShouldPlay){
   musicShouldPlay=false;
   removeMusicRetryListeners();
@@ -490,9 +493,11 @@ musicToggle.addEventListener('click',()=>{
   musicToggle.setAttribute('aria-pressed','false');
  }else requestMusicPlay();
 });
-ensureMusicContext();
-loadMusicBuffers().then(startMusic).catch(error=>console.error('Background music could not be loaded.',error));
-startMusic();
+if(!silentEmbed){
+ ensureMusicContext();
+ loadMusicBuffers().then(startMusic).catch(error=>console.error('Background music could not be loaded.',error));
+ startMusic();
+}
 $('#toTop').onclick=e=>{e.preventDefault();goTo('hero')};$('#backTop').onclick=()=>goTo('hero');
 let lbI=0,lbPrev=null;
 function openLB(id){const i=FRAMES.findIndex(f=>f.id===id);if(i<0)return;lbI=i;const f=FRAMES[i];$('#lbImg').src=f.src;$('#lbImg').alt='BARAKA, '+f.title;$('#lbS').textContent=catName(f.cat)+' · '+f.title;$('#lbC').textContent=pad(i+1)+' / '+pad(FRAMES.length);if($('#lb').hidden){lbPrev=document.activeElement;$('#lb').hidden=false;document.body.style.overflow='hidden';$('#lbX').focus()}}
